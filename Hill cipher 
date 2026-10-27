@@ -1,10 +1,34 @@
-import numpy as np
-text = input("Enter text (even length, CAPS): ")
-key = np.array([[3,3],[2,5]])
-nums = [ord(c)-65 for c in text]
+key = [[3, 3], [2, 5]]
+
+text = input("Enter plaintext: ").upper().replace(" ", "")
+
+if len(text) % 2 != 0:
+    text += "X"
+
 cipher = ""
-for i in range(0,len(nums),2):
-    pair = np.array([[nums[i]],[nums[i+1]]])
-    result = np.dot(key,pair)%26
-    cipher+=chr(result[0][0]+65)+chr(result[1][0]+65)
-print("Ciphertext:",cipher)
+
+for i in range(0, len(text), 2):
+
+    a = ord(text[i]) - 65
+    b = ord(text[i + 1]) - 65
+
+    x = (3 * a + 3 * b) % 26
+    y = (2 * a + 5 * b) % 26
+
+    cipher += chr(x + 65) + chr(y + 65)
+
+print("Encrypted:", cipher)
+
+plain = ""
+
+for i in range(0, len(cipher), 2):
+
+    a = ord(cipher[i]) - 65
+    b = ord(cipher[i + 1]) - 65
+
+    x = (15 * a + 17 * b) % 26
+    y = (20 * a + 9 * b) % 26
+
+    plain += chr(x + 65) + chr(y + 65)
+
+print("Decrypted:", plain)
