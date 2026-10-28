@@ -3,21 +3,18 @@ from Crypto.Util.Padding import pad, unpad
 
 key1 = b'12345678'
 key2 = b'87654321'
-key3 = b'11223344'
 text = input("Enter text: ").encode()
 
-c1 = DES.new(key1, DES.MODE_ECB)
-c2 = DES.new(key2, DES.MODE_ECB)
-c3 = DES.new(key3, DES.MODE_ECB)
+# Encryption 2 times
+cipher1 = DES.new(key1, DES.MODE_ECB)
+cipher2 = DES.new(key2, DES.MODE_ECB)
 
-# Triple Encrypt: E3(D2(E1(text)))
-e1 = c1.encrypt(pad(text, 8))
-d2 = c2.decrypt(e1)
-encrypted = c3.encrypt(d2)
+# Double encrypt
+temp = cipher1.encrypt(pad(text, 8))
+encrypted = cipher2.encrypt(temp)
 print("Encrypted:", encrypted.hex())
 
-# Triple Decrypt reverse: D1(E2(D3(C)))
-d3 = c3.decrypt(encrypted)
-e2 = c2.encrypt(d3)
-decrypted = unpad(c1.decrypt(e2), 8)
+# Double decrypt (reverse order)
+temp = cipher2.decrypt(encrypted)
+decrypted = unpad(cipher1.decrypt(temp), 8)
 print("Decrypted:", decrypted.decode())
