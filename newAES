@@ -1,0 +1,17 @@
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad, unpad
+
+text = input("Enter text: ").encode()
+key = input("Enter the key (16 characters): ").encode()
+
+if len(key) != 16:
+    print("Error: Key must be exactly 16 bytes.")
+else:
+    cipher = AES.new(key, AES.MODE_ECB)
+
+    encryption = cipher.encrypt(pad(text, AES.block_size))
+    decryption = unpad(cipher.decrypt(encryption), AES.block_size)
+
+    print("Plain text:", text.decode())
+    print("Encrypted text:", encryption.hex())
+    print("Decrypted text:", decryption.decode())
