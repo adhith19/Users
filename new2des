@@ -1,0 +1,23 @@
+from Crypto.Cipher import DES
+from Crypto.Util.Padding import pad, unpad
+
+key1 = b'12345678'
+key2 = b'87654321'
+key3 = b'11223344'
+text = input("Enter text: ").encode()
+
+c1 = DES.new(key1, DES.MODE_ECB)
+c2 = DES.new(key2, DES.MODE_ECB)
+c3 = DES.new(key3, DES.MODE_ECB)
+
+# Triple Encrypt: E3(D2(E1(text)))
+e1 = c1.encrypt(pad(text, 8))
+d2 = c2.decrypt(e1)
+encrypted = c3.encrypt(d2)
+print("Encrypted:", encrypted.hex())
+
+# Triple Decrypt reverse: D1(E2(D3(C)))
+d3 = c3.decrypt(encrypted)
+e2 = c2.encrypt(d3)
+decrypted = unpad(c1.decrypt(e2), 8)
+print("Decrypted:", decrypted.decode())
